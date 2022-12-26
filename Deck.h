@@ -8,6 +8,7 @@
 #include "RandomNumberGenerator.h"
 #include "Player.h"
 #include <vector>
+#include <iostream>
 using namespace std;
 
 class Deck

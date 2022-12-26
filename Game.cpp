@@ -33,6 +33,7 @@ void Game::dealHelper()
         cardsPerPlayer = 5;
 
     deck.Deal(cardsPerPlayer, players);
+    wait(3);
 }
 
 vector<Player> &Game::getPlayers()
@@ -57,9 +58,11 @@ Deck &Game::getDeck()
 
 void Game::playerTurn(Player& currentPlayer)
 {
+    cout << endl;
     if (!currentPlayer.getCurrentHand().empty())
     {
         currentPlayer.displayHand();
+        wait(5);
         cout << "Ask a player for a card" << endl;
 
         int playerNum;
@@ -72,7 +75,7 @@ void Game::playerTurn(Player& currentPlayer)
             cout << "Enter the number of the player" << endl;
             for (int k = 0; k < getNumPlayers(); k++)
             {
-                if (currentPlayer.getPlayerID() != k + 1)
+                if (currentPlayer.getPlayerID() != k + 1 && !getPlayers()[k].getCurrentHand().empty())
                     cout << to_string(k+1) << ". " << getPlayers()[k].getName() << endl;
             }
             cin >> playerNum;
@@ -90,26 +93,71 @@ void Game::playerTurn(Player& currentPlayer)
             if (validAskCheckCard(currentPlayer, cardIndex))
             {
                 validAskCard = true;
-                cardGiving(getPlayers()[playerNum-1], currentPlayer, cardIndex);
+                cardGiving(getPlayers()[playerNum-1], currentPlayer, cardIndex, true);
             }
             else
                 cout << "You can only ask for cards of a type you already have. Ask again!" << endl;
         }
     }
     else
-    {
-        currentPlayer.displayHand();
-        if (!getDeck().getCards().empty())
-        {
-            currentPlayer.getCurrentHand().push_back(getDeck().Draw());
-            cout << currentPlayer.getName() << " draws " << currentPlayer.getCurrentHand()[0].getName() << endl;  //0 coz there's only one card in hand at this stage
-        }
-        else
-            cout << "There are no more cards in the deck! You have " << currentPlayer.getSetsMade() << " sets!" << endl;
-    }
+        emptyHandCondition(currentPlayer);
 }
 
-void Game::cardGiving(Player &askedPlayer, Player &playerThatAsked, int askedCardID)
+void Game::aiPlayerTurn(Player &currentPlayer)
+{
+    cout << endl;
+    if (!currentPlayer.getCurrentHand().empty())
+    {
+        //currentPlayer.displayHand();
+        //wait(5);
+        map<int, int>::iterator it;
+        int mostCardsPerType = 0;
+        int askingCardIndex;
+        bool validPlayer = false;
+        for (it = currentPlayer.getHandMap().begin(); it != currentPlayer.getHandMap().end(); it++)
+        {
+            if (it->second > mostCardsPerType)
+            {
+                mostCardsPerType = it->second;
+                askingCardIndex = it->first;
+            }
+        }
+        //cout << "debug0" << endl;
+        int playerNum;
+        while (!validPlayer)
+        {
+            playerNum = RandomNumberGenerator::RandInt(1, getNumPlayers());
+            //cout << playerNum << " debug1" << endl;
+            if (validAskCheckPlayer(currentPlayer, playerNum))
+            {
+                validPlayer = true;
+                //cout << "debug1.75" << endl;
+            }
+        }
+        //cout << "debug2" << endl;
+
+        string cardName;
+        if (askingCardIndex == 0)
+            cardName = "King";
+        else if (askingCardIndex == 1)
+            cardName = "Ace";
+        else if (askingCardIndex== 11)
+            cardName = "Jack";
+        else if (askingCardIndex== 12)
+            cardName = "Queen";
+        else
+            cardName = to_string(askingCardIndex);
+
+        cout << currentPlayer.getName() << " asks " << getPlayers()[playerNum - 1].getName() << " for " << cardName << "s." << endl;
+        wait(2);
+        cardGiving(getPlayers()[playerNum - 1], currentPlayer, askingCardIndex, false);
+        //cout << "debug3" << endl;
+    }
+    else
+        emptyHandCondition(currentPlayer);
+}
+
+void Game::cardGiving(Player &askedPlayer, Player &playerThatAsked, int askedCardID, bool isHumanTurn)
 {   //debug this. not all cards given
     bool hasMatches = false;
     for (int i = 0; i < askedPlayer.getCurrentHand().size(); i++)
@@ -126,14 +174,14 @@ void Game::cardGiving(Player &askedPlayer, Player &playerThatAsked, int askedCar
         }
     }
     if (!hasMatches)
-        goFish(askedPlayer, playerThatAsked, askedCardID);
-    cout << "debug1" << endl;
+        goFish(askedPlayer, playerThatAsked, askedCardID, isHumanTurn);
+    //cout << "debug1" << endl;
     setMadeCheck(playerThatAsked);
 }
 
-bool Game::validAskCheckPlayer(Player &playerThatAsked, int askedPlayerIndex) const
+bool Game::validAskCheckPlayer(Player &playerThatAsked, int askedPlayerIndex)
 {
-    if (askedPlayerIndex > 0 && askedPlayerIndex <= getNumPlayers() && askedPlayerIndex != playerThatAsked.getPlayerID())
+    if (askedPlayerIndex > 0 && askedPlayerIndex <= getNumPlayers() && askedPlayerIndex != playerThatAsked.getPlayerID() && !getPlayers()[askedPlayerIndex-1].getCurrentHand().empty())
         return true;
     else
         return false;
@@ -146,14 +194,31 @@ bool Game::validAskCheckCard(Player &playerThatAsked, int askedCardIndex)
         return false;
 }
 
-void Game::goFish(Player& askedPlayer, Player& playerThatAsked, int askedCardID)
+void Game::goFish(Player& askedPlayer, Player& playerThatAsked, int askedCardID, bool isHumanTurn)
 {
-    cout << askedPlayer.getName() << " doesn't have any " << askedCardID << "s. Go Fish!" << endl;
+    string cardName;
+
+    if (askedCardID == 0)
+        cardName = "King";
+    else if (askedCardID == 1)
+        cardName = "Ace";
+    else if (askedCardID == 11)
+        cardName = "Jack";
+    else if (askedCardID == 12)
+        cardName = "Queen";
+    else
+        cardName = to_string(askedCardID);
+
+    cout << askedPlayer.getName() << " doesn't have any " << cardName << "s. Go Fish!" << endl;
     if (!deck.getCards().empty())
     {
         playerThatAsked.getCurrentHand().push_back(deck.Draw());
         playerThatAsked.updateMap();
-        cout << playerThatAsked.getName() << " draws " << playerThatAsked.getCurrentHand()[playerThatAsked.getCurrentHand().size()-1].getName() << endl;
+        wait(2);
+        if (isHumanTurn)
+            cout << playerThatAsked.getName() << " draws " << playerThatAsked.getCurrentHand()[playerThatAsked.getCurrentHand().size()-1].getName() << endl;
+        else
+            cout << playerThatAsked.getName() << " draws a card." << endl;
     }
     else
         cout << "No more cards in the deck. Next turn!" << endl;
@@ -216,4 +281,22 @@ void Game::setAnnouncement(Player &player, int cardIndex)
     else
         cardName = to_string(cardIndex);
     cout << player.getName() << " has made a set of " << cardName << "s!" << endl;
+}
+
+void Game::emptyHandCondition(Player &currentPlayer)
+{
+    currentPlayer.displayHand();
+    if (!getDeck().getCards().empty())
+    {
+        currentPlayer.getCurrentHand().push_back(getDeck().Draw());
+        cout << currentPlayer.getName() << " draws " << currentPlayer.getCurrentHand()[0].getName() << endl;  //0 coz there's only one card in hand at this stage
+    }
+    else
+        cout << "There are no more cards in the deck! " << currentPlayer.getName() << " has " << currentPlayer.getSetsMade() << " sets!" << endl;
+}
+
+void Game::wait(int seconds)    //https://java2blog.com/cpp-wait-seconds/#Wait_for_seconds_using_the_wait_function_in_C
+{
+    chrono::system_clock::time_point waitUntil = chrono::system_clock::now() + chrono::seconds(seconds);
+    this_thread::sleep_until(waitUntil);
 }

@@ -1,11 +1,13 @@
 #include "Deck.h"
 #include "FullyMultiplayerGame.h"
+#include "SingleplayerGame.h"
 using namespace std;
 
 int main()
 {
     Deck deck;
-    FullyMultiplayerGame game(4, deck);
+    //FullyMultiplayerGame game(4, deck);
+    SingleplayerGame game(4, deck);
     return 0;
 }
 

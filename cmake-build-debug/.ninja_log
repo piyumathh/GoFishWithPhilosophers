@@ -1,0 +1,12 @@
+# ninja log v5
+0	329	6937388513400545	CMakeFiles/GoFishWithPhilosophers2.dir/Card.cpp.obj	aad1b5bd60edecf5
+21	530	6937388515378724	CMakeFiles/GoFishWithPhilosophers2.dir/RandomNumberGenerator.cpp.obj	c08292923444ae47
+10	621	6937388516307867	CMakeFiles/GoFishWithPhilosophers2.dir/Player.cpp.obj	3fe366378201851f
+5	728	6937388517378605	CMakeFiles/GoFishWithPhilosophers2.dir/main.cpp.obj	967617947bac1d91
+28	729	6937388517398608	CMakeFiles/GoFishWithPhilosophers2.dir/FullyMultiplayerGame.cpp.obj	13086d264eebe9ae
+15	766	6937388517768336	CMakeFiles/GoFishWithPhilosophers2.dir/Deck.cpp.obj	186e3c5859acad08
+33	807	6937388518175302	CMakeFiles/GoFishWithPhilosophers2.dir/SingleplayerGame.cpp.obj	ef63a2895a3ef128
+40	1538	6937388525477653	CMakeFiles/GoFishWithPhilosophers2.dir/Game.cpp.obj	f9e409aa2fa0e7b7
+1539	1695	6937388527010674	GoFishWithPhilosophers2.exe	f9a98f37c2a5d539
+2	515	6937390417070645	CMakeFiles/GoFishWithPhilosophers2.dir/SingleplayerGame.cpp.obj	ef63a2895a3ef128
+516	675	6937390418621717	GoFishWithPhilosophers2.exe	f9a98f37c2a5d539

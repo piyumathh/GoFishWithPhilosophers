@@ -45,7 +45,7 @@ void Player::updateMap()
 {
     int cardIndex = currentHand[currentHand.size() - 1].getIndex() % 13;
     handMap[cardIndex]++;
-    cout << "debug4 " << handMap[cardIndex] << endl;
+    //cout << "debug4 " << handMap[cardIndex] << endl;
 }
 
 map<int, int> &Player::getHandMap()
@@ -65,7 +65,5 @@ void Player::displayHand()
         for (auto & i : currentHand)
             cout << i.getName() << endl;
     }
-
-
     cout << endl;
 }

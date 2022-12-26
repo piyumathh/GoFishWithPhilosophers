@@ -39,6 +39,8 @@ Card Deck::Draw()
 
 void Deck::Deal(int perPlayer, vector<Player>& players)
 {
+    cout << "Dealing cards" << endl;
+    cout << "............." << endl;
     while (perPlayer > 0)   //repeats for a number of times
     {
         for (auto & player : players)   //each player gets a Drawn card
@@ -46,8 +48,6 @@ void Deck::Deal(int perPlayer, vector<Player>& players)
             player.getCurrentHand().push_back(Draw());
             player.updateMap();
         }
-
-
         perPlayer--;
     }
 }
