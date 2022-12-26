@@ -9,6 +9,7 @@ This file is a description of the project at its current stage. There are 4 sect
 3) describes the classes
 4) goes over future steps
 some may find it helpful to read through 2) and 3) in parallel to understand the code easier
+this file is currently formatted to be read in <> form. (top right)
 
 1).Go Fish rules
 ----------------
