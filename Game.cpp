@@ -283,13 +283,16 @@ void Game::setAnnouncement(Player &player, int cardIndex)
     cout << player.getName() << " has made a set of " << cardName << "s!" << endl;
 }
 
-void Game::emptyHandCondition(Player &currentPlayer)
+void Game::emptyHandCondition(Player &currentPlayer, bool isHumanTurn)
 {
     currentPlayer.displayHand();
     if (!getDeck().getCards().empty())
     {
         currentPlayer.getCurrentHand().push_back(getDeck().Draw());
-        cout << currentPlayer.getName() << " draws " << currentPlayer.getCurrentHand()[0].getName() << endl;  //0 coz there's only one card in hand at this stage
+        if (isHumanTurn)
+            cout << currentPlayer.getName() << " draws " << currentPlayer.getCurrentHand()[0].getName() << endl; //0 coz there's only one card in hand at this stage
+        else
+            cout << currentPlayer.getName() << " draws a card." << endl;
     }
     else
         cout << "There are no more cards in the deck! " << currentPlayer.getName() << " has " << currentPlayer.getSetsMade() << " sets!" << endl;

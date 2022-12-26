@@ -29,9 +29,10 @@ void FullyMultiplayerGame::gameplay()
     while (!getEndCondition())
     {
         for (auto & i : getPlayers())
+        {
             playerTurn(i);
-
-        endConditionCheck();
+            endConditionCheck();    //moved this from outside the for loop
+        }
     }
     cout << endl;
     resultsAnnouncement();

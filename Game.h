@@ -39,7 +39,7 @@ public:
     static void setAnnouncement(Player& player, int cardIndex);
     void playerTurn(Player& currentPlayer);
     void aiPlayerTurn(Player& currentPlayer);
-    void emptyHandCondition(Player& currentPlayer);
+    void emptyHandCondition(Player& currentPlayer, bool isHumanTurn);
     static void wait(int seconds);
 };
 
